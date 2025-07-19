@@ -1,4 +1,5 @@
 # deletes the first Book instance
-Book.objects.filter(title='Ninetenn Eighty-Four').delete()
+book = Book.objects.get(id=1)
+book.delete()
 
-# Expected output after deletion: NO error
+# Expected output: Empty QuerySet[]
