@@ -1,7 +1,5 @@
 # updates the first Book insatance attribute value
 
-x = Book.objects.all()[0]
-x.title = 'Nineteen Eighty-Four'
-x.save()
+Book.objects.filter(title='1984').update(title='Nineteen Eighty-Four)
 
-#Expected output: x.title 'Nineteen Eighty-Four'
+#Expected output: Object title is now Nineteen Eighty-Four

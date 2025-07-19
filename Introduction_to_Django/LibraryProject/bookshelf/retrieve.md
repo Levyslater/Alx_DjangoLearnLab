@@ -1,6 +1,4 @@
 # retrieves all Book instance
 
-Book.objects.all()
-
-# Expected Output
-<QuerySet [<Book: Book object (1)>]>
+book = Book.objects.get(title='1984')
+# Expected Output: return the Book object titled 1984
