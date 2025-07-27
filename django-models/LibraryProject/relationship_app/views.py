@@ -5,13 +5,13 @@ from .models import Library, Book
 def view_all_books(request):
     books = Book.objects.all()
     context = {'books': books}
-    return render(request, 'books/list_books.html', context)
+    return render(request, 'relationship_app/list_books.html', context)
 
 
 class LibraryDetailView(DetailView):
     """Displays details of a specific library and lists all its books."""
     model = Library
-    template_name = 'books/library_detail.html'
+    template_name = 'relationship_app/library_detail.html'
     context_object_name = 'library'
 
     def get_context_data(self, **kwargs):
