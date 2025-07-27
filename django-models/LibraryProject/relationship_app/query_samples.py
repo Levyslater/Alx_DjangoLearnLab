@@ -3,14 +3,15 @@ It demonstrates how to interact with the Author, Book, Library, and Librarian mo
 
 from .models import Author, Book, Library, Librarian
 
-def get_books_by_author(author_id):
-    """Returns a list of books written by a specific author."""
-    return Book.objects.get(author_id=author_id)
+def get_all_books_by_author(author_name):
+    author = Author.objects.get(name=author_name)
+    return Book.objects.filter(author=author)
 
 
-def get_librarian_for_library(library_id):
-    """Returns the librarian for a specific library."""
-    return Librarian.objects.get(library_id=library_id)
+def get_librarian_for_library(library_name):
+    """Returns the librarian responsible for a specific library."""
+    library = Library.objects.get(name=library_name)
+    return Librarian.objects.get(library=library)
 
 def get_all_books_in_library(library_name):
     """Returns a list of all books in a specific library."""
