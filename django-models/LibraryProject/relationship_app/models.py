@@ -26,12 +26,12 @@ class Book(models.Model):
     author = models.ForeignKey(Author, on_delete=models.CASCADE, related_name='books')
     
     class Meta:
-        permissions = [
+        permissions = (
             ("can_add_book", "Can add a book"),
             ("can_delete_book", "Can delete a book"),
             ("can_view_book", "Can view books"),
             ("can_update_book", "Can update a book"),
-        ]
+        )
 
     def __str__(self):
         """Returns the title of the book."""
