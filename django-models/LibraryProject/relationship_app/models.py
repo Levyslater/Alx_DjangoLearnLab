@@ -30,7 +30,7 @@ class Book(models.Model):
             ("can_add_book", "Can add a book"),
             ("can_delete_book", "Can delete a book"),
             ("can_view_book", "Can view books"),
-            ("can_update_book", "Can update a book"),
+            ("can_change_book", "Can change a book"),
         )
 
     def __str__(self):
@@ -97,7 +97,7 @@ def assign_permissions_based_on_role(sender, instance, **kwargs):
     add_perm = Permission.objects.get(codename='can_add_book', content_type=content_type)
     delete_perm = Permission.objects.get(codename='can_delete_book', content_type=content_type)
     view_perm = Permission.objects.get(codename='can_view_book', content_type=content_type)
-    update_perm = Permission.objects.get(codename='can_update_book', content_type=content_type)
+    update_perm = Permission.objects.get(codename='can_change_book', content_type=content_type)
 
     # Clear old permissions
     user.user_permissions.clear()
