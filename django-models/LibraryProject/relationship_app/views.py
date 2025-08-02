@@ -116,8 +116,8 @@ def add_book(request):
 
 
 # Update Book (Admin & Librarian)
-@permission_required('relationship_app.can_update_book', raise_exception=True)
-def update_book(request, book_id):
+@permission_required('relationship_app.can_change_book', raise_exception=True)
+def change_book(request, book_id):
     """Handles the update of an existing book."""
     """Fetches the book by ID and updates its details."""
     """Requires permission to update a book."""
