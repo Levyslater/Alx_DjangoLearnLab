@@ -27,6 +27,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+HANDLER403 = 'relationship_app.views.custom_permission_denied_view'
 
 # Application definition
 

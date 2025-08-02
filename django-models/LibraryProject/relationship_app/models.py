@@ -2,6 +2,8 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from django.contrib.auth.models import Permission
+from django.contrib.contenttypes.models import ContentType
 
 # Create your models here.
 
@@ -22,6 +24,14 @@ class Book(models.Model):
     """This model represents a book in the library management system."""
     title = models.CharField(max_length=200)
     author = models.ForeignKey(Author, on_delete=models.CASCADE, related_name='books')
+    
+    class Meta:
+        permissions = [
+            ("can_add_book", "Can add a book"),
+            ("can_delete_book", "Can delete a book"),
+            ("can_view_book", "Can view books"),
+            ("can_update_book", "Can update a book"),
+        ]
 
     def __str__(self):
         """Returns the title of the book."""
@@ -74,3 +84,32 @@ def create_user_profile(sender, instance, created, **kwargs):
 def save_user_profile(sender, instance, **kwargs):
     """Ensure the profile is saved when the User is saved."""
     instance.profile.save()
+
+
+@receiver(post_save, sender=UserProfile)
+def assign_permissions_based_on_role(sender, instance, **kwargs):
+    """Assign permissions dynamically based on user role once a user profile is created."""
+    user = instance.user
+    content_type = ContentType.objects.get_for_model(Book)
+
+    # Get all custom permissions
+    # Permissions for Book model
+    add_perm = Permission.objects.get(codename='can_add_book', content_type=content_type)
+    delete_perm = Permission.objects.get(codename='can_delete_book', content_type=content_type)
+    view_perm = Permission.objects.get(codename='can_view_book', content_type=content_type)
+    update_perm = Permission.objects.get(codename='can_update_book', content_type=content_type)
+
+    # Clear old permissions
+    user.user_permissions.clear()
+
+    if instance.role == 'Admin':
+        # Admin gets all permissions
+        user.user_permissions.add(add_perm, delete_perm, view_perm, update_perm)
+
+    elif instance.role == 'Librarian':
+        # Librarian gets all except delete
+        user.user_permissions.add(add_perm, view_perm, update_perm)
+
+    elif instance.role == 'Member':
+        # Member only gets view
+        user.user_permissions.add(view_perm)

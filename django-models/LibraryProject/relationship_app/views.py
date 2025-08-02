@@ -1,6 +1,8 @@
 from django.shortcuts import render,redirect
 from django.views.generic.detail import DetailView
-from .models import Library, Book
+from .models import Library, Book, Author
+from django.contrib.auth.decorators import permission_required
+from django.shortcuts import get_object_or_404
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib import messages
 from django.contrib.auth import authenticate
@@ -11,12 +13,6 @@ from django.views.generic.edit import CreateView
 from django.contrib.auth.decorators import login_required, user_passes_test
 from .utils import is_admin, is_librarian, is_member
 
-
-
-def list_books(request):
-    books = Book.objects.all()
-    context = {'books': books}
-    return render(request, 'relationship_app/list_books.html', context)
 
 
 class LibraryDetailView(DetailView):
@@ -93,3 +89,63 @@ def librarian_view(request):
 @user_passes_test(is_member, login_url='/login/')
 def member_view(request):
     return render(request, 'relationship_app/member_view.html')
+
+# View Books (all roles with view permission)
+@permission_required('relationship_app.can_view_book', raise_exception=True)
+def list_books(request):
+    books = Book.objects.all()
+    return render(request, 'relationship_app/display_books.html', {'books': books})
+
+
+# Add Book (Admin & Librarian)
+@permission_required('relationship_app.can_add_book', raise_exception=True)
+def add_book(request):
+    """Handles the addition of a new book."""
+    if request.method == 'POST':
+        # Handle the form submission to add a new book
+        title = request.POST['title']
+        author = Author.objects.get(id=request.POST['author_id'])
+        Book.objects.create(title=title, author=author)
+        return redirect('all_books')
+
+    # If GET request, render the form to add a new book
+    # Assuming you have a form to select an author
+    # For simplicity, we will just list all authors
+    authors = Author.objects.all()
+    return render(request, 'relationship_app/add_book.html', {'authors': authors})
+
+
+# Update Book (Admin & Librarian)
+@permission_required('relationship_app.can_update_book', raise_exception=True)
+def update_book(request, book_id):
+    """Handles the update of an existing book."""
+    """Fetches the book by ID and updates its details."""
+    """Requires permission to update a book."""
+    """If the book does not exist, it raises a 404 error."""
+    book = get_object_or_404(Book, id=book_id)
+    if request.method == 'POST':
+        book.title = request.POST['title']
+        book.author = Author.objects.get(id=request.POST['author_id'])
+        book.save()
+        return redirect('all_books')
+    # If GET request, render the form to update the book
+    # Assuming you have a form to select an author
+    # For simplicity, we will just list all authors
+    authors = Author.objects.all()
+    return render(request, 'relationship_app/update_book.html', {'book': book, 'authors': authors})
+
+
+# Delete Book (Admin only)
+@permission_required('relationship_app.can_delete_book', raise_exception=True)
+def delete_book(request, book_id):
+    """Handles the deletion of a book."""
+    """Fetches the book by ID and deletes it."""
+    """Requires permission to delete a book."""
+    """If the book does not exist, it raises a 404 error."""
+    """Redirects to the list of all books after deletion."""
+    book = get_object_or_404(Book, id=book_id)
+    book.delete()
+    return redirect('all_books')
+
+def custom_permission_denied_view(request, exception=None):
+    return render(request, '403.html', status=403)
