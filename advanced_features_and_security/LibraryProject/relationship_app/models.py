@@ -4,8 +4,6 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.contrib.auth.models import Permission
 from django.contrib.contenttypes.models import ContentType
-from .managers import CustomUserManager
-from django.contrib.auth.models import AbstractUser
 from django.conf import settings
 
 # Create your models here.
@@ -27,6 +25,7 @@ class Book(models.Model):
     """This model represents a book in the library management system."""
     title = models.CharField(max_length=200)
     author = models.ForeignKey(Author, on_delete=models.CASCADE, related_name='books')
+    publication_year = models.IntegerField()
     
     class Meta:
         permissions = (
@@ -69,12 +68,10 @@ class UserProfile(models.Model):
         ('Librarian', 'Librarian'),
         ('Member', 'Member'),
     ]
-    
+
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='profile')
     role = models.CharField(max_length=20, choices=ROLE_CHOICES, default='Member')
-    profile_picture = models.ImageField(upload_to='profile_pics/', blank=True, null=True,
-                                        default='profile_pics/default.jpg')
-
+    
     def __str__(self):
         return f"{self.user.username} - {self.role}"
 
@@ -118,18 +115,3 @@ def assign_permissions_based_on_role(sender, instance, **kwargs):
     elif instance.role == 'Member':
         # Member only gets view
         user.user_permissions.add(view_perm)
-
-class CustomUser(AbstractUser):
-    """Custom User Model that extends the default Django User model.
-    This model can be used to add additional fields or methods in the future."""
-      
-    email = models.EmailField(unique=True,)
-    date_of_birth = models.DateField(blank=True, null=True)
-    profile_picture = models.ImageField(upload_to='profile_pics/', blank=True, null=True, 
-                                        default='profile_pics/default.jpg')
-    objects = CustomUserManager()
-    USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['username']
-    def __str__(self):
-        """Returns the username of the user."""
-        return self.email or self.username

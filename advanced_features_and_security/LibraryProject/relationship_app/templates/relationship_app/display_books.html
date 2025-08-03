@@ -17,6 +17,7 @@
             <tr>
                 <th>Title</th>
                 <th>Author</th>
+                <th>Publication Year</th>
                 <th>Actions</th>
             </tr>
         </thead>
@@ -25,6 +26,7 @@
             <tr>
                 <td>{{ book.title }}</td>
                 <td>{{ book.author.name }}</td>
+                <td>{{ book.publication_year }}</td>
                 <td>
                     {% if perms.relationship_app.can_update_book %}
                         <a href="{% url 'update_book' book.id %}">Edit</a>
