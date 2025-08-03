@@ -16,7 +16,7 @@ class CustomUser(AbstractUser):
       
     email = models.EmailField(unique=True,)
     date_of_birth = models.DateField(blank=True, null=True)
-    profile_picture = models.ImageField(upload_to='profile_pics/', blank=True, null=True, 
+    profile_photo = models.ImageField(upload_to='profile_pics/', blank=True, null=True, 
                                         default='profile_pics/default.jpg')
     objects = CustomUserManager()
     USERNAME_FIELD = 'email'
