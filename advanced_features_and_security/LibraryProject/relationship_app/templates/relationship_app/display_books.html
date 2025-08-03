@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Books List</title>
+</head>
+<body>
+    <h1>Library Books</h1>
+
+    <!-- Add Book button only if user has add_book permission -->
+    {% if perms.relationship_app.can_add_book %}
+        <a href="{% url 'add_book' %}">Add New Book</a>
+    {% endif %}
+
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Author</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for book in books %}
+            <tr>
+                <td>{{ book.title }}</td>
+                <td>{{ book.author.name }}</td>
+                <td>
+                    {% if perms.relationship_app.can_update_book %}
+                        <a href="{% url 'update_book' book.id %}">Edit</a>
+                    {% endif %}
+                    {% if perms.relationship_app.can_delete_book %}
+                        <a href="{% url 'delete_book' book.id %}">Delete</a>
+                    {% endif %}
+                </td>
+            </tr>
+        {% empty %}
+            <tr><td colspan="3">No books found.</td></tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+</body>
+</html>
