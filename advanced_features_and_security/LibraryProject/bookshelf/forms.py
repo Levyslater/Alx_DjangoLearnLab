@@ -12,7 +12,7 @@ class CustomUserCreationForm(UserCreationForm):
         fields = ('email', 'username', 'date_of_birth', 'profile_photo')
     
     
-class CustomUserChangeForm(UserChangeForm):
+class ExampleForm(UserChangeForm):
     """ Form for updating an existing user.
     """
 
