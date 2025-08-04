@@ -23,7 +23,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure--a(m_e59uah5zw!5d-7#qahy5%-oaqk7rybs9hp87jn9ciy%1w'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = []
 
@@ -129,4 +129,55 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media' 
 
 # Custom user model
-AUTH_USER_MODEL = 'bookshelf.CustomUser' 
+AUTH_USER_MODEL = 'bookshelf.CustomUser'
+
+# Session settings
+SESSION_COOKIE_SECURE = True
+
+# CSRF settings
+CSRF_COOKIE_SECURE = True
+
+# X-Content-Type-Options header
+# This header prevents browsers from MIME-sniffing a response away from the declared content-type.
+SECURE_CONTENT_TYPE_NOSNIFF = True
+
+# X-Frame-Options header
+# This header prevents clickjacking by disallowing the page to be framed.
+X_FRAME_OPTIONS = 'DENY'  # or 'SAMEORIGIN' if you allow framing on your own domain
+
+# X-XSS-Protection header
+# This header enables the cross-site scripting (XSS) filter in browsers.
+SECURE_BROWSER_XSS_FILTER = True
+#
+# Content Security Policy (CSP) settings
+# add csp to installed apps and middleware
+# This helps prevent XSS attacks by controlling which resources can be loaded.
+# Note: You need to install the django-csp package for this to work.
+# You can install it using pip:
+INSTALLED_APPS += ['csp']
+
+MIDDLEWARE += [
+    'csp.middleware.CSPMiddleware',
+]
+
+
+# Content Security Policy (CSP) settings
+# These settings define which sources are allowed for various types of content.
+CSP_DEFAULT_SRC = ("'self'",)
+CSP_SCRIPT_SRC = ("'self'", "https://apis.google.com")
+CSP_STYLE_SRC = ("'self'", "'unsafe-inline'")
+CSP_IMG_SRC = ("'self'", "https://trustedcdn.com")
+
+# Strict Transport Security (HSTS) settings
+# HSTS is a web security policy mechanism that helps protect websites
+
+SECURE_SSL_REDIRECT = True
+SECURE_HSTS_SECONDS = '31536000'
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+SECURE_HSTS_PRELOAD = True
+
+# ensure sesiion cookies are sent via secure HTTPS
+
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+
