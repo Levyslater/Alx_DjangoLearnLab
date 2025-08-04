@@ -22,8 +22,8 @@ def list_books(request):
 
 
 # Add Book (Admin & Librarian)
-@permission_required('bookshelf.can_add', raise_exception=True)
-def add_book(request):
+@permission_required('bookshelf.can_create', raise_exception=True)
+def create_book(request):
     """Handles the addition of a new book."""
     if request.method == 'POST':
         # Handle the form submission to add a new book
