@@ -22,13 +22,13 @@ class CustomUserAdmin(UserAdmin):
     list_filter = ('is_staff', 'is_active', 'date_of_birth')
     fieldsets = (
         (None, {'fields': ('email', 'password')}),
-        ('Personal info', {'fields': ('date_of_birth', 'username', 'profile_picture')}),
+        ('Personal info', {'fields': ('date_of_birth', 'username', 'profile_photo')}),
         ('Permissions', {'fields': ('is_staff', 'is_active', 'groups', 'user_permissions')}),
     )
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
-            'fields': ('username','email', 'password1', 'password2', 'date_of_birth', 'profile_picture')}
+            'fields': ('username','email', 'password1', 'password2', 'date_of_birth', 'profile_photo')}
         ),
     )
     search_fields = ('email', 'username')
@@ -37,6 +37,6 @@ admin.site.register(CustomUser, CustomUserAdmin)
 
 def profile_picture_tag(obj):
     """Returns an HTML image tag for the profile picture."""
-    if obj.profile_picture:
-        return format_html('<img src="{}" width="50" height="50" />', obj.profile_picture.url)
+    if obj.profile_photo:
+        return format_html('<img src="{}" width="50" height="50" />', obj.profile_photo.url)
     return 'No picture'
