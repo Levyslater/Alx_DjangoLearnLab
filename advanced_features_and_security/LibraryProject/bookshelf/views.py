@@ -16,7 +16,7 @@ class SignUpView(CreateView):
     template_name = 'bookshelf/register.html'
     success_url = reverse_lazy('login')  # Redirect to login page after successful registration
 @permission_required('bookshelf.can_view', raise_exception=True)
-def list_books(request):
+def book_list(request):
     books = Book.objects.all()
     return render(request, 'bookshelf/display_books.html', {'books': books})
 
