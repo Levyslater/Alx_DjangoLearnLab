@@ -12,19 +12,28 @@ class AuthorSerializer(serializers.ModelSerializer):
 
 
 class BookSerializer(serializers.ModelSerializer):
-    """Serialize the Book Model including its related Authors.
-    This serializer includes validation to ensure that the publication year
-    is not in the future.
+    """Serialize the Book Model.
+    This serializer is used to represent the Book model, including its related authors.
+    The related_name here is irrelevant since we are using the AuthorSerializer to handle author data.
+    The create method allows for nested author data to be passed in when creating a new book.
     """
-    author = AuthorSerializer(read_only=True)
+    author = AuthorSerializer()
+
     class Meta:
         model = Book
         fields = ['title', 'publication_year', 'author']
-        
-    def validate(self, data):
-        """ Validate the publication year of the book.
-        Ensure that the publication year is not in the future.
+
+    def create(self, validated_data):
+        """Create a new Book instance with nested author data.
+        This method extracts the author data from the validated_data,
+        gets or creates the author instance, and then creates the book instance.
         """
-        if 'publication_year' in data and data['publication_year'] > datetime.date.today():
-            raise serializers.ValidationError("Publication year cannot be in the future.")
-        return data
+        # Extract nested author data (dictionary)
+        author_data = validated_data.pop('author')
+        
+        # Get or create that author
+        author, _ = Author.objects.get_or_create(**author_data)
+        
+        # Create the book linked to that author
+        book = Book.objects.create(author=author, **validated_data)
+        return book
