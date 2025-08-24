@@ -1,0 +1,1 @@
+A waste trading app created using Django Framework.
