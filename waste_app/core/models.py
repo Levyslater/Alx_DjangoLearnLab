@@ -63,7 +63,9 @@ class CustomUser(AbstractUser):
         Django automatically creates a method called get_fieldname_display()
         that returns a human readable version of the field's value.
         """
-        return f"{self.username} ({self.get_role_display()})"
+        prefix = self.email.split('@')[0]
+        role = self.get_role_display() if self.role else ""
+        return f"{prefix} ({role})" if role else prefix
 
 
 class WastePost(models.Model):
@@ -87,4 +89,8 @@ class WastePost(models.Model):
     posted_by = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
 
     def __str__(self):
-        return f"{self.title} by {self.posted_by.username}"
+        """
+        create a pseudo username by splitting the email at the '@' symbol.
+        Note if two users have the same prefix but different domains, they will have the same pseudo username.
+        """
+        return f"{self.title} by {self.posted_by.email.split('@')[0]}"
