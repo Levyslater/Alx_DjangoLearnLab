@@ -24,3 +24,11 @@ def dashboard(request):
     Render the dashboard page upon login.
     """
     return render(request, "core/dashboard.html")
+
+@login_required
+def profile(request):
+    """
+    Render the profile page for the logged-in user.
+    """
+    context = {'user': request.user}
+    return render(request, "core/profile.html", context)
