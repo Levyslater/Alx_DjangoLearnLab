@@ -6,10 +6,10 @@
   <p><strong>First Name:</strong> {{ user.first_name }}</p>
   <p><strong>Last Name:</strong> {{ user.last_name }}</p>
 
-  {% if user.profile %}
-    <p><strong>Location:</strong> {{ user.profile.location }}</p>
-    <p><strong>Phone:</strong> {{ user.profile.phone_number }}</p>
-    <p><strong>Bio:</strong> {{ user.profile.bio }}</p>
+  {% if user.get_profile %}
+    <p><strong>Location:</strong> {{ user.get_profile.location }}</p>
+    <p><strong>Phone:</strong> {{ user.get_profile.phone_number }}</p>
+    <p><strong>Bio:</strong> {{ user.get_profile.bio }}</p>
   {% endif %}
 
   <a href="{% url 'dashboard' %}">Back to Dashboard</a>

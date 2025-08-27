@@ -71,6 +71,11 @@ class CustomUser(AbstractUser):
         role = self.get_role_display() if self.role else ""
         return f"{prefix} ({role})" if role else prefix
 
+    def get_profile(self):
+        """
+        
+        """
+        return getattr(self, "profile", None)
 
 class WastePost(models.Model):
     """
@@ -98,3 +103,76 @@ class WastePost(models.Model):
         Note if two users have the same prefix but different domains, they will have the same pseudo username.
         """
         return f"{self.title} by {self.posted_by.email.split('@')[0]}"
+
+class Profile(models.Model):
+    """
+    User profile model to store additional information about the user.
+    """
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    location = models.CharField(max_length=100, blank=True, null=True)
+    phone_number = models.CharField(max_length=20, blank=True, null=True)
+    bio = models.TextField(blank=True, null=True)
+
+    def __str__(self):
+        """
+        
+        """
+        return f"{self.user.email.split('@')[0]} Profile"
+    
+
+class WasteSale(models.Model):
+    """
+    
+    """
+    buyer = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        related_name="purchases",
+        on_delete=models.CASCADE
+    )
+    seller = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        related_name="sales",
+        on_delete=models.CASCADE
+    )
+    waste_post = models.ForeignKey(
+        "WastePost",
+        related_name="sales",
+        on_delete=models.CASCADE
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Sale: {self.waste_post.title} from {self.seller} to {self.buyer}"
+    
+    
+class Message(models.Model):
+    sender = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        related_name="sent_messages",
+        on_delete=models.CASCADE
+    )
+    receiver = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        related_name="received_messages",
+        on_delete=models.CASCADE
+    )
+    context = models.TextField()  # main message body
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    def receiver_phone(self):
+        """
+        fetches the user phone number if already exists
+        """
+        return self.receiver.phone_number if hasattr(self.receiver, "phone_number") else "N/A"
+
+    def receiver_location(self):
+        """
+        fetches the user location if already exists
+        """
+        return self.receiver.location if hasattr(self.receiver, "location") else "N/A"
+
+    def __str__(self):
+        """
+        
+        """
+        return f"Message from {self.sender} to {self.receiver} at {self.timestamp}"

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import CustomUser, WastePost
+from .models import CustomUser, WastePost, WasteSale, Message
 # Register your models here.
 
 """
@@ -26,3 +26,18 @@ class CustomUserAdmin(admin.ModelAdmin):
     # add filters on the right
     list_filter = ('role', 'is_active', 'is_staff')
     ordering = ('-is_active',)
+
+@admin.register(WasteSale)
+class WasteSaleAdmin(admin.ModelAdmin):
+    list_display = ('buyer', 'seller', 'waste_post', 'created_at')
+    search_fields = ('buyer__email', 'seller__email', 'waste_post__title')
+    list_filter = ('created_at',)
+    ordering = ('-created_at',)
+
+
+@admin.register(Message)
+class MessageAdmin(admin.ModelAdmin):
+    list_display = ('sender', 'receiver', 'timestamp')
+    search_fields = ('sender__email', 'receiver__email', 'context')
+    list_filter = ('timestamp',)
+    ordering = ('-timestamp',)
