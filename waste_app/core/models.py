@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser, BaseUserManager
-
+from django.conf import settings
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 # Create your models here.
 
 class CustomUserManager(BaseUserManager):
@@ -13,6 +15,7 @@ class CustomUserManager(BaseUserManager):
         """
         if not email:
             raise ValueError("The Email field must be set")
+        # make email lowercase
         email = self.normalize_email(email)
         user = self.model(email=email, **extra_fields)
         user.set_password(password)
@@ -23,6 +26,7 @@ class CustomUserManager(BaseUserManager):
         """
         Create and return a superuser with an email and password.
         """
+        # set default values for is_staff and is_superuser to True to enable admin access
         extra_fields.setdefault("is_staff", True)
         extra_fields.setdefault("is_superuser", True)
 
@@ -60,7 +64,7 @@ class CustomUser(AbstractUser):
 
     def __str__(self):
         """whenever you define a choices field, 
-        Django automatically creates a method called get_fieldname_display()
+        Django automatically creates a method called get_<fieldname>_display()
         that returns a human readable version of the field's value.
         """
         prefix = self.email.split('@')[0]

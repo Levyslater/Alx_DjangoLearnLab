@@ -124,3 +124,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # set the app to use our custom user model
 AUTH_USER_MODEL = 'core.CustomUser'
+
+# instead of redirecting to /accounts/profile/ after login, redirect to dashboard
+LOGIN_REDIRECT_URL = 'dashboard'
+# after logout redirect to login page
+LOGOUT_REDIRECT_URL = 'login'
