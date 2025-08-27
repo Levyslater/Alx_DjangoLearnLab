@@ -4,9 +4,15 @@ from .models import CustomUser, Profile
 
 @receiver(post_save, sender=CustomUser)
 def create_user_profile(sender, instance, created, **kwargs):
+    """
+    Handle creation of user profiles automatically  once registered
+    """
     if created:
         Profile.objects.create(user=instance)
 
 @receiver(post_save, sender=CustomUser)
 def save_user_profile(sender, instance, **kwargs):
+    """
+    save the user profile once created
+    """
     instance.profile.save()
