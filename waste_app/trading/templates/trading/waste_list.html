@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-4">
+  <h2>Available Waste Posts</h2>
+  <a href="{% url 'waste-create' %}" class="btn btn-success mb-3">Post New Waste</a>
+
+  {% for post in waste_posts %}
+    <div class="card mb-3">
+      <div class="card-body">
+        <h5 class="card-title">{{ post.title }}</h5>
+        <p>{{ post.description }}</p>
+        <p><strong>Quantity:</strong> {{ post.quantity }}</p>
+        <p><strong>Posted by:</strong> {{ post.posted_by.email }}</p>
+        <p><strong>Price:</strong> {{ post.price }}</p>
+
+        {% if user == post.posted_by %}
+          <a href="{% url 'waste-update' post.id %}" class="btn btn-primary">Edit</a>
+          <a href="{% url 'waste-delete' post.id %}" class="btn btn-danger">Delete</a>
+        {% elif user.role == "Recycler" %}
+          <a href="{% url 'buy-waste' post.id %}" class="btn btn-warning">Buy</a>
+          <a href="{% url 'send-message' post.posted_by.id %}" class="btn btn-info">Message Seller</a>
+        {% endif %}
+      </div>
+    </div>
+  {% empty %}
+    <p>No waste posts available.</p>
+  {% endfor %}
+</div>
+{% endblock %}

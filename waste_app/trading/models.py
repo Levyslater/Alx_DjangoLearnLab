@@ -42,6 +42,7 @@ class WastePost(models.Model):
         ('electronic', 'Electronic'),
     )
     title = models.CharField(max_length=100)
+    quantity = models.PositiveIntegerField()
     description = models.TextField()
     price = models.DecimalField(max_digits=10, decimal_places=2)
     waste_type = models.CharField(max_length=20, choices=WASTE_TYPE_CHOICES)

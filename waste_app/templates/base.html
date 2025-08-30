@@ -10,7 +10,6 @@
 <body>
     <header>
         <nav>
-        
             {% if user.is_authenticated %}
                 <a href="{% url 'dashboard' %}">Dashboard</a> |
                 <span>Welcome, {{ user.first_name|default:user.email }}</span>
@@ -26,6 +25,17 @@
         </nav>
     </header>
 
+    <!-- ✅ Messages block -->
+    <div class="messages">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+
     <div class="content">
         {% block content %}
         <!-- Page-specific content goes here -->
@@ -35,3 +45,5 @@
     <footer>
         <p>&copy; 2025 Waste App Inc </p>
     </footer>
+</body>
+</html>

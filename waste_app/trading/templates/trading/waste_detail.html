@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-4">
+  <h2>{{ waste_post.title }}</h2>
+  <p><strong>Type:</strong> {{ waste_post.waste_type }}</p>
+  <p><strong>Quantity:</strong> {{ waste_post.quantity }}</p>
+  <p><strong>Price:</strong> {{ waste_post.price }}</p>
+  <p><strong>Description:</strong> {{ waste_post.description }}</p>
+  <p><strong>Posted by:</strong> {{ waste_post.posted_by }}</p>
+  <p><strong>Created:</strong> {{ waste_post.created_at }}</p>
+
+  {% if user != waste_post.posted_by %}
+    <a href="{% url 'buy-waste' waste_post.pk %}" class="btn btn-success">Buy Waste</a>
+  {% endif %}
+
+  {% if user == waste_post.posted_by %}
+    <a href="{% url 'post-update' waste_post.pk %}" class="btn btn-primary">Edit</a>
+    <a href="{% url 'post-delete' waste_post.pk %}" class="btn btn-danger">Delete</a>
+  {% endif %}
+</div>
+{% endblock %}
