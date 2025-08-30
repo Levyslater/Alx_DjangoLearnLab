@@ -1,6 +1,7 @@
 from django.contrib import admin
-from .models import CustomUser, WastePost, WasteSale, Message
-# Register your models here.
+from .models import CustomUser
+from trading.models import WastePost, WasteSale
+from messaging.models import Message
 
 """
 admin.site.register() provides basic CRUD operations and return ModelAdmin instances
