@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-4">
+  <h2>Inbox</h2>
+  {% for message in messages %}
+    <div class="card mb-2">
+      <div class="card-body">
+        <p><strong>From:</strong> {{ message.sender.email }}</p>
+        <p>{{ message.content }}</p>
+        <small class="text-muted">{{ message.timestamp }}</small>
+        <br>
+        <a href="{% url 'send-message' message.sender.id %}" class="btn btn-sm btn-primary mt-2">Reply</a>
+      </div>
+    </div>
+  {% empty %}
+    <p>No messages yet.</p>
+  {% endfor %}
+</div>
+{% endblock %}
