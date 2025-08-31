@@ -3,5 +3,5 @@ from . import views
 
 urlpatterns = [
     path("inbox/", views.inbox, name="inbox"),
-    path("send/<int:user_id>/", views.send_message, name="send-message"),
+    path("send/<int:receiver_id>/", views.send_message, name="send-message"),
 ]

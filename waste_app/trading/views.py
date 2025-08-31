@@ -58,24 +58,26 @@ def buy_waste(request, pk):
     """Allow a logged-in recycler to buy a waste post."""
     waste_post = get_object_or_404(WastePost, pk=pk)
 
-    # Prevent the seller from buying their own waste
+    # Prevent seller from buying their own post
     if waste_post.posted_by == request.user:
         messages.error(request, "You cannot buy your own waste post.")
         return redirect("waste-list")
 
-    # Check if already purchased
-    if WasteSale.objects.filter(
-        waste_post=waste_post, buyer=request.user
-    ).exists():
-        messages.warning(request, "You have already purchased this waste.")
-        return redirect("post-detail", pk=waste_post.pk)
+    # Prevent multiple sales of same post
+    if waste_post.is_sold:
+        messages.error(request, "This waste has already been sold.")
+        return redirect("waste-list")
 
     # Create the WasteSale record
     WasteSale.objects.create(
         waste_post=waste_post,
         buyer=request.user,
-        seller=waste_post.user
+        seller=waste_post.posted_by
     )
+
+    # Mark the waste as sold
+    waste_post.is_sold = True
+    waste_post.save()
 
     messages.success(request, "You successfully purchased this waste!")
     return redirect("waste-list")

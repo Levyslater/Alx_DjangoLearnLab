@@ -1,11 +1,97 @@
 {% extends "base.html" %}
-{% block title %} Dashboard{% endblock %}
-
 {% block content %}
-<h2>Welcome to the Waste App Dashboard</h2>
-<p>Hello, {{ user.first_name|default:user.email }}!</p>
+<div class="container mt-4">
 
-<hr>
-<p>Basic dashboard</p>
+  <h2 class="mb-4">Welcome, {{ user.email }}!</h2>
 
+  <!-- PROFILE CARD -->
+  <div class="card mb-4 shadow-sm">
+    <div class="card-body">
+      <h5 class="card-title">Profile Info</h5>
+      <p><strong>Role:</strong> {{ user.get_role_display }}</p>
+      <p><strong>Email:</strong> {{ user.email }}</p>
+      <a href="{% url 'profile-update' %}" class="btn btn-sm btn-outline-primary">Update Profile</a>
+    </div>
+  </div>
+
+  <!-- WASTE GENERATOR DASHBOARD -->
+  {% if user.get_role_display == "Waste Generator" %}
+    <div class="row">
+      <!-- My Posts -->
+      <div class="col-md-6 mb-4">
+        <div class="card shadow-sm">
+          <div class="card-body">
+            <h5 class="card-title">My Waste Posts</h5>
+            <a href="{% url 'waste-create' %}" class="btn btn-sm btn-success mb-3">+ Post Waste</a>
+            {% for post in my_posts %}
+              <div class="border rounded p-2 mb-2">
+                <strong>{{ post.title }}</strong> ({{ post.quantity }}) <br>
+                <a href="{% url 'waste-update' post.id %}" class="btn btn-sm btn-primary">Edit</a>
+                <a href="{% url 'waste-delete' post.id %}" class="btn btn-sm btn-danger">Delete</a>
+              </div>
+            {% empty %}
+              <p>No posts yet. Create your first one!</p>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+
+      <!-- Available Waste -->
+      <div class="col-md-6 mb-4">
+        <div class="card shadow-sm">
+          <div class="card-body">
+            <h5 class="card-title">Available Waste</h5>
+            {% for post in available_posts %}
+              <div class="border rounded p-2 mb-2">
+                <strong>{{ post.title }}</strong> ({{ post.quantity }}) <br>
+                Posted by {{ post.posted_by.email }}
+                <a href="{% url 'send-message' post.posted_by.id %}" class="btn btn-sm btn-info mt-1">Message Seller</a>
+              </div>
+            {% empty %}
+              <p>No posts available yet.</p>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+
+  <!-- RECYCLER DASHBOARD -->
+  {% if user.get_role_display == "Recycler" %}
+    <div class="card shadow-sm mb-4">
+      <div class="card-body">
+        <h5 class="card-title">Available Waste to Buy</h5>
+        {% for post in available_posts %}
+          <div class="border rounded p-2 mb-2">
+            <strong>{{ post.title }}</strong> ({{ post.quantity }}) <br>
+            Posted by {{ post.posted_by.email }}
+            <a href="{% url 'buy-waste' post.id %}" class="btn btn-sm btn-warning">Buy</a>
+            <a href="{% url 'send-message' post.posted_by.id %}" class="btn btn-sm btn-info">Message Seller</a>
+          </div>
+        {% empty %}
+          <p>No waste available at the moment.</p>
+        {% endfor %}
+      </div>
+    </div>
+  {% endif %}
+
+  <!-- MESSAGES -->
+  <div class="card shadow-sm">
+    <div class="card-body">
+      <h5 class="card-title">Inbox</h5>
+      {% for message in inbox %}
+        <div class="border rounded p-2 mb-2">
+          <strong>From:</strong> {{ message.sender.email }} <br>
+          {{ message.content }}
+          <br><small class="text-muted">{{ message.timestamp }}</small>
+          <a href="{% url 'send-message' message.sender.id %}" class="btn btn-sm btn-primary mt-1">Reply</a>
+        </div>
+      {% empty %}
+        <p>No messages yet.</p>
+      {% endfor %}
+      <a href="{% url 'inbox' %}" class="btn btn-sm btn-outline-secondary mt-2">View All Messages</a>
+    </div>
+  </div>
+
+</div>
 {% endblock %}

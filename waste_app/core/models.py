@@ -72,9 +72,16 @@ class CustomUser(AbstractUser):
 
     def get_profile(self):
         """
-        
+        If user has no profile, return None instead of raising an exception.
+        1-to-1 relationship between user and profile
+        1. If a user is created, a profile is automatically created using signals.
+        2. If a user is deleted, the associated profile is also deleted.
         """
-        return getattr(self, "profile", None)
+        try:
+            return self.profile
+        except Profile.DoesNotExist:
+             return None
+
 
 
 class Profile(models.Model):
@@ -91,7 +98,4 @@ class Profile(models.Model):
         
         """
         return f"{self.user.email.split('@')[0]} Profile"
-    
-
-    
     
