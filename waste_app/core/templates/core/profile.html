@@ -1,17 +1,48 @@
 {% extends "base.html" %}
+{% block title %}My Profile{% endblock %}
+
 {% block content %}
-  <h2>User Profile</h2>
-  <p><strong>Email:</strong> {{ user.email }}</p>
-  <p><strong>Role:</strong> {{ user.get_role_display }}</p>
-  <p><strong>First Name:</strong> {{ user.first_name }}</p>
-  <p><strong>Last Name:</strong> {{ user.last_name }}</p>
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <h3 class="card-title text-center mb-4">User Profile</h3>
 
-  {% if user.get_profile %}
-    <p><strong>Location:</strong> {{ user.get_profile.location }}</p>
-    <p><strong>Phone:</strong> {{ user.get_profile.phone_number }}</p>
-    <p><strong>Bio:</strong> {{ user.get_profile.bio }}</p>
-  {% endif %}
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item">
+              <strong>Email:</strong> {{ user.email }}
+            </li>
+            <li class="list-group-item">
+              <strong>Role:</strong> {{ user.get_role_display }}
+            </li>
+            <li class="list-group-item">
+              <strong>First Name:</strong> {{ user.first_name }}
+            </li>
+            <li class="list-group-item">
+              <strong>Last Name:</strong> {{ user.last_name }}
+            </li>
 
-  <a href="{% url 'profile-update' %}">Edit Profile</a> |
-  <a href="{% url 'dashboard' %}">Back to Dashboard</a>
+            {% if user.get_profile %}
+              <li class="list-group-item">
+                <strong>Location:</strong> {{ user.get_profile.location }}
+              </li>
+              <li class="list-group-item">
+                <strong>Phone:</strong> {{ user.get_profile.phone_number }}
+              </li>
+              <li class="list-group-item">
+                <strong>Bio:</strong> {{ user.get_profile.bio }}
+              </li>
+            {% endif %}
+          </ul>
+
+          <div class="mt-4 d-flex justify-content-between">
+            <a href="{% url 'profile-update' %}" class="btn btn-primary">Edit Profile</a>
+            <a href="{% url 'dashboard' %}" class="btn btn-outline-secondary">Back to Dashboard</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 {% endblock %}

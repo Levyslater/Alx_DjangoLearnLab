@@ -1,11 +1,25 @@
 {% extends "base.html" %}
+{% block title %}Send Message{% endblock %}
+
 {% block content %}
-<div class="container mt-4">
-  <h2>Send Message</h2>
-  <form method="post">
-    {% csrf_token %}
-    <textarea name="content" class="form-control mb-2" rows="4" placeholder="Type your message here..."></textarea>
-    <button type="submit" class="btn btn-primary">Send</button>
-  </form>
+<div class="container mt-5">
+  <div class="card shadow-sm">
+    <div class="card-header">
+      <h4 class="mb-0">✉️ Send Message</h4>
+    </div>
+    <div class="card-body">
+      <form method="post">
+        {% csrf_token %}
+        <div class="mb-3">
+          <textarea name="content" 
+                    class="form-control" 
+                    rows="5" 
+                    placeholder="Type your message here..."></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Send</button>
+        <a href="{% url 'inbox' %}" class="btn btn-secondary ms-2">Cancel</a>
+      </form>
+    </div>
+  </div>
 </div>
 {% endblock %}

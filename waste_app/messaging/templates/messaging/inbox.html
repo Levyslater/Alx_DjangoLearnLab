@@ -1,19 +1,27 @@
 {% extends "base.html" %}
+{% block title %}Inbox{% endblock %}
+
 {% block content %}
-<div class="container mt-4">
-  <h2>Inbox</h2>
+<div class="container mt-5">
+  <h2 class="mb-4 text-center">📬 Inbox</h2>
+
   {% for message in messages %}
-    <div class="card mb-2">
+    <div class="card mb-3 shadow-sm">
+      <div class="card-header d-flex justify-content-between align-items-center">
+        <span><strong>From:</strong> {{ message.sender.email }}</span>
+        <small class="text-muted">{{ message.timestamp|date:"M d, Y H:i" }}</small>
+      </div>
       <div class="card-body">
-        <p><strong>From:</strong> {{ message.sender.email }}</p>
-        <p>{{ message.content }}</p>
-        <small class="text-muted">{{ message.timestamp }}</small>
-        <br>
-        <a href="{% url 'send-message' message.sender.id %}" class="btn btn-sm btn-primary mt-2">Reply</a>
+        <p class="card-text">{{ message.content }}</p>
+        <a href="{% url 'send-message' message.sender.id %}" class="btn btn-sm btn-outline-primary">
+          Reply
+        </a>
       </div>
     </div>
   {% empty %}
-    <p>No messages yet.</p>
+    <div class="alert alert-info text-center" role="alert">
+      No messages yet.
+    </div>
   {% endfor %}
 </div>
 {% endblock %}

@@ -2,35 +2,51 @@
 {% block content %}
 <div class="container mt-4">
 
-  <h2 class="mb-4">Welcome, {{ user.email }}!</h2>
+  <!-- Welcome Header -->
+  <div class="text-center mb-5">
+    <h2 class="fw-bold">Welcome, {{ user.email }}!</h2>
+    <p class="text-muted">Role: <span class="badge bg-secondary">{{ user.get_role_display }}</span></p>
+  </div>
 
-  <!-- PROFILE CARD -->
-  <div class="card mb-4 shadow-sm">
+  <!-- Profile Card -->
+  <div class="card shadow-sm mb-4">
     <div class="card-body">
-      <h5 class="card-title">Profile Info</h5>
-      <p><strong>Role:</strong> {{ user.get_role_display }}</p>
-      <p><strong>Email:</strong> {{ user.email }}</p>
-      <a href="{% url 'profile-update' %}" class="btn btn-sm btn-outline-primary">Update Profile</a>
+      <h5 class="card-title">Profile Information</h5>
+      <ul class="list-unstyled">
+        <li><strong>Email:</strong> {{ user.email }}</li>
+        <li><strong>Role:</strong> {{ user.get_role_display }}</li>
+      </ul>
+      <a href="{% url 'profile-update' %}" class="btn btn-outline-primary btn-sm">
+        <i class="bi bi-pencil-square"></i> Update Profile
+      </a>
     </div>
   </div>
 
-  <!-- WASTE GENERATOR DASHBOARD -->
+  <!-- Waste Generator Dashboard -->
   {% if user.get_role_display == "Waste Generator" %}
     <div class="row">
       <!-- My Posts -->
       <div class="col-md-6 mb-4">
-        <div class="card shadow-sm">
+        <div class="card shadow-sm h-100">
           <div class="card-body">
-            <h5 class="card-title">My Waste Posts</h5>
-            <a href="{% url 'waste-create' %}" class="btn btn-sm btn-success mb-3">+ Post Waste</a>
+            <h5 class="card-title d-flex justify-content-between align-items-center">
+              My Waste Posts
+              <a href="{% url 'waste-create' %}" class="btn btn-success btn-sm">
+                <i class="bi bi-plus-lg"></i> Post Waste
+              </a>
+            </h5>
+            <hr>
             {% for post in my_posts %}
-              <div class="border rounded p-2 mb-2">
-                <strong>{{ post.title }}</strong> ({{ post.quantity }}) <br>
-                <a href="{% url 'waste-update' post.id %}" class="btn btn-sm btn-primary">Edit</a>
-                <a href="{% url 'waste-delete' post.id %}" class="btn btn-sm btn-danger">Delete</a>
+              <div class="border rounded p-3 mb-3 bg-light">
+                <h6 class="mb-1">{{ post.title }}</h6>
+                <small class="text-muted">Quantity: {{ post.quantity }}</small><br>
+                <div class="mt-2">
+                  <a href="{% url 'waste-update' post.id %}" class="btn btn-sm btn-outline-primary">Edit</a>
+                  <a href="{% url 'waste-delete' post.id %}" class="btn btn-sm btn-outline-danger">Delete</a>
+                </div>
               </div>
             {% empty %}
-              <p>No posts yet. Create your first one!</p>
+              <p class="text-muted">No posts yet. Create your first one!</p>
             {% endfor %}
           </div>
         </div>
@@ -38,17 +54,21 @@
 
       <!-- Available Waste -->
       <div class="col-md-6 mb-4">
-        <div class="card shadow-sm">
+        <div class="card shadow-sm h-100">
           <div class="card-body">
             <h5 class="card-title">Available Waste</h5>
+            <hr>
             {% for post in available_posts %}
-              <div class="border rounded p-2 mb-2">
-                <strong>{{ post.title }}</strong> ({{ post.quantity }}) <br>
-                Posted by {{ post.posted_by.email }}
-                <a href="{% url 'send-message' post.posted_by.id %}" class="btn btn-sm btn-info mt-1">Message Seller</a>
+              <div class="border rounded p-3 mb-3 bg-light">
+                <h6 class="mb-1">{{ post.title }}</h6>
+                <small class="text-muted">Quantity: {{ post.quantity }}</small><br>
+                <small>Posted by <strong>{{ post.posted_by.email }}</strong></small>
+                <div class="mt-2">
+                  <a href="{% url 'send-message' post.posted_by.id %}" class="btn btn-sm btn-info">Message Seller</a>
+                </div>
               </div>
             {% empty %}
-              <p>No posts available yet.</p>
+              <p class="text-muted">No posts available yet.</p>
             {% endfor %}
           </div>
         </div>
@@ -56,40 +76,47 @@
     </div>
   {% endif %}
 
-  <!-- RECYCLER DASHBOARD -->
+  <!-- Recycler Dashboard -->
   {% if user.get_role_display == "Recycler" %}
     <div class="card shadow-sm mb-4">
       <div class="card-body">
         <h5 class="card-title">Available Waste to Buy</h5>
+        <hr>
         {% for post in available_posts %}
-          <div class="border rounded p-2 mb-2">
-            <strong>{{ post.title }}</strong> ({{ post.quantity }}) <br>
-            Posted by {{ post.posted_by.email }}
-            <a href="{% url 'buy-waste' post.id %}" class="btn btn-sm btn-warning">Buy</a>
-            <a href="{% url 'send-message' post.posted_by.id %}" class="btn btn-sm btn-info">Message Seller</a>
+          <div class="border rounded p-3 mb-3 bg-light">
+            <h6 class="mb-1">{{ post.title }}</h6>
+            <small class="text-muted">Quantity: {{ post.quantity }}</small><br>
+            <small>Posted by <strong>{{ post.posted_by.email }}</strong></small>
+            <div class="mt-2">
+              <a href="{% url 'buy-waste' post.id %}" class="btn btn-sm btn-warning">Buy</a>
+              <a href="{% url 'send-message' post.posted_by.id %}" class="btn btn-sm btn-info">Message Seller</a>
+            </div>
           </div>
         {% empty %}
-          <p>No waste available at the moment.</p>
+          <p class="text-muted">No waste available at the moment.</p>
         {% endfor %}
       </div>
     </div>
   {% endif %}
 
-  <!-- MESSAGES -->
+  <!-- Inbox -->
   <div class="card shadow-sm">
     <div class="card-body">
       <h5 class="card-title">Inbox</h5>
+      <hr>
       {% for message in inbox %}
-        <div class="border rounded p-2 mb-2">
-          <strong>From:</strong> {{ message.sender.email }} <br>
-          {{ message.content }}
-          <br><small class="text-muted">{{ message.timestamp }}</small>
-          <a href="{% url 'send-message' message.sender.id %}" class="btn btn-sm btn-primary mt-1">Reply</a>
+        <div class="border rounded p-3 mb-3 bg-light">
+          <p class="mb-1"><strong>From:</strong> {{ message.sender.email }}</p>
+          <p class="mb-1">{{ message.content }}</p>
+          <small class="text-muted">{{ message.timestamp }}</small>
+          <div class="mt-2">
+            <a href="{% url 'send-message' message.sender.id %}" class="btn btn-sm btn-outline-primary">Reply</a>
+          </div>
         </div>
       {% empty %}
-        <p>No messages yet.</p>
+        <p class="text-muted">No messages yet.</p>
       {% endfor %}
-      <a href="{% url 'inbox' %}" class="btn btn-sm btn-outline-secondary mt-2">View All Messages</a>
+      <a href="{% url 'inbox' %}" class="btn btn-outline-secondary btn-sm mt-2">View All Messages</a>
     </div>
   </div>
 

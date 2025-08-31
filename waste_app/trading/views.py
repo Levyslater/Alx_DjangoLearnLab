@@ -9,13 +9,13 @@ from django.contrib import messages
 class WastePostListView(LoginRequiredMixin, ListView):
     model = WastePost
     template_name = "trading/waste_list.html"
-    context_object_name = "waste_posts"
+    context_object_name = "waste_post"
     ordering = ["-created_at"]
 
 class WastePostDetailView(LoginRequiredMixin, DetailView):
     model = WastePost
     template_name = "trading/waste_detail.html"
-    context_object_name = "waste_posts"
+    context_object_name = "waste_post"
 
 class WastePostCreateView(LoginRequiredMixin, CreateView):
     model = WastePost

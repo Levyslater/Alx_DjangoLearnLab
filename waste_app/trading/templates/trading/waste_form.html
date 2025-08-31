@@ -1,11 +1,55 @@
 {% extends "base.html" %}
+{% load widget_tweaks %}
+{% block title %}{% if object %}Edit Waste Post{% else %}Create Waste Post{% endif %}{% endblock %}
+
 {% block content %}
-<div class="container mt-4">
-  <h2>{% if object %}Edit Waste{% else %}Post Waste{% endif %}</h2>
-  <form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit" class="btn btn-success">Save</button>
-  </form>
+<div class="container mt-5">
+  <div class="card shadow-sm">
+    <div class="card-header bg-success text-white">
+      <h4 class="mb-0">{% if object %}✏️ Edit Waste{% else %}➕ Post Waste{% endif %}</h4>
+    </div>
+    <div class="card-body">
+      <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <div class="mb-3">
+          {{ form.title.label_tag }}
+          {{ form.title|add_class:"form-control" }}
+        </div>
+
+        <div class="mb-3">
+          {{ form.waste_type.label_tag }}
+          {{ form.waste_type|add_class:"form-select" }}
+        </div>
+
+        <div class="mb-3">
+          {{ form.quantity.label_tag }}
+          {{ form.quantity|add_class:"form-control" }}
+        </div>
+
+        <div class="mb-3">
+          {{ form.price.label_tag }}
+          {{ form.price|add_class:"form-control" }}
+        </div>
+
+        <div class="mb-3">
+          {{ form.description.label_tag }}
+          {{ form.description|add_class:"form-control" }}
+        </div>
+
+        {% if form.image %}
+        <div class="mb-3">
+          {{ form.image.label_tag }}
+          {{ form.image|add_class:"form-control" }}
+        </div>
+        {% endif %}
+
+        <button type="submit" class="btn btn-success">
+          {% if object %}Update{% else %}Save{% endif %}
+        </button>
+        <a href="{% url 'waste-list' %}" class="btn btn-secondary">Cancel</a>
+      </form>
+    </div>
+  </div>
 </div>
 {% endblock %}
