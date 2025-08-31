@@ -1,27 +1,39 @@
 {% extends "base.html" %}
-{% block title %}Inbox{% endblock %}
 
 {% block content %}
-<div class="container mt-5">
-  <h2 class="mb-4 text-center">📬 Inbox</h2>
+<div class="container mt-4">
+    <h2 class="mb-3">Inbox</h2>
 
-  {% for message in messages %}
-    <div class="card mb-3 shadow-sm">
-      <div class="card-header d-flex justify-content-between align-items-center">
-        <span><strong>From:</strong> {{ message.sender.email }}</span>
-        <small class="text-muted">{{ message.timestamp|date:"M d, Y H:i" }}</small>
-      </div>
-      <div class="card-body">
-        <p class="card-text">{{ message.content }}</p>
-        <a href="{% url 'send-message' message.sender.id %}" class="btn btn-sm btn-outline-primary">
-          Reply
-        </a>
-      </div>
-    </div>
-  {% empty %}
-    <div class="alert alert-info text-center" role="alert">
-      No messages yet.
-    </div>
-  {% endfor %}
+    {% if messages %}
+        <div class="list-group">
+            {% for msg in messages %}
+                <div class="list-group-item mb-3 shadow-sm rounded">
+                    <div class="d-flex justify-content-between">
+                        <strong>From: {{ msg.sender.username }}</strong>
+                        <small class="text-muted">{{ msg.timestamp|date:"M d, Y H:i" }}</small>
+                    </div>
+
+                    {% if msg.waste_post %}
+                        <p class="mb-1">
+                            <em>Regarding:</em> 
+                            <a href="{% url 'waste_detail' msg.waste_post.id %}">
+                                {{ msg.waste_post.title }}
+                            </a>
+                        </p>
+                    {% endif %}
+
+                    <p>{{ msg.content }}</p>
+
+                    <div>
+                        <a href="{% url 'send_message' receiver_id=msg.sender.id %}" class="btn btn-sm btn-outline-primary">
+                            Reply
+                        </a>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p class="text-muted">No messages yet.</p>
+    {% endif %}
 </div>
 {% endblock %}

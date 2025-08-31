@@ -6,8 +6,7 @@ from core.models import CustomUser
 # Create your models here.
 
 class WasteSale(models.Model):
-    """
-    
+    """Model to record sales of waste posts
     """
     buyer = models.ForeignKey(
         settings.AUTH_USER_MODEL,

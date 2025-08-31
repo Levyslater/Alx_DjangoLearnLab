@@ -94,8 +94,7 @@ class Profile(models.Model):
     bio = models.TextField(blank=True, null=True)
 
     def __str__(self):
-        """
-        
+        """create a pseudo username by splitting the email at the '@' symbol.
         """
         return f"{self.user.email.split('@')[0]} Profile"
     

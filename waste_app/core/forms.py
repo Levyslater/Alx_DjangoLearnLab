@@ -15,6 +15,9 @@ class CustomUserRegistrationForm(UserCreationForm):
         
 
 class ProfileUpdateForm(forms.ModelForm):
+    """
+    extend the profile update form to include User fields like first_name, last_name, and email
+    """
     first_name = forms.CharField(required=False, max_length=30)
     last_name = forms.CharField(required=False, max_length=30)
     email = forms.EmailField(required=True)
@@ -24,6 +27,7 @@ class ProfileUpdateForm(forms.ModelForm):
         fields = ["phone_number", "location", "bio"]
 
     def __init__(self, *args, **kwargs):
+        """Override init to accept a user instance and populate initial data."""
         user = kwargs.pop("user", None)  # pass request.user when instantiating
         super().__init__(*args, **kwargs)
 
@@ -33,6 +37,7 @@ class ProfileUpdateForm(forms.ModelForm):
             self.fields["email"].initial = user.email
 
     def save(self, commit=True):
+        """Override save to update both Profile and User fields."""
         profile = super().save(commit=False)
         user = profile.user
 

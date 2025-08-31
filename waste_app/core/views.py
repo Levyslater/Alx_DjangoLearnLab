@@ -25,26 +25,24 @@ def register(request):
 @login_required
 def dashboard(request):
     """
-    Render the dashboard with user posts, available posts, and inbox.
+    Render a simplified dashboard with links to key sections and awareness info.
     """
     user = request.user
 
-    # Posts created by the logged-in user
-    my_posts = WastePost.objects.filter(posted_by=user)
-
-    # Posts available from other users
-    available_posts = WastePost.objects.filter(is_sold=False).exclude(posted_by=user)
-
-    # Inbox for the logged-in user
-    inbox = Message.objects.filter(receiver=user).order_by("-timestamp")
+    waste_tips = [
+        "Separate your waste into recyclables, compostables, and general waste.",
+        "Avoid burning plastic as it releases harmful chemicals.",
+        "Use reusable bags instead of plastic bags.",
+        "Compost organic kitchen waste to reduce landfill usage.",
+    ]
 
     context = {
         "user": user,
-        "my_posts": my_posts,
-        "available_posts": available_posts,
-        "inbox": inbox,
+        "waste_tips": waste_tips,
     }
+
     return render(request, "core/dashboard.html", context)
+
 
 
 @login_required
@@ -60,6 +58,7 @@ User = get_user_model()
 
 @login_required
 def profile_update(request):
+    """Allow users to update their profile and user info."""
     profile = request.user.profile
 
     if request.method == "POST":

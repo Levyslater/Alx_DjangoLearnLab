@@ -5,9 +5,11 @@
 <div class="container mt-5">
   <div class="d-flex justify-content-between align-items-center mb-4">
     <h2 class="fw-bold text-success">♻️ Available Waste Posts</h2>
-    <a href="{% url 'waste-create' %}" class="btn btn-success">
-      ➕ Post New Waste
-    </a>
+    {% if user.get_role_display != "Recycler" %}
+        <a href="{% url 'waste-create' %}" class="btn btn-success">
+        ➕ Post New Waste
+        </a>
+    {% endif %}
   </div>
 
   <div class="row">
@@ -36,7 +38,7 @@
                 <a href="{% url 'waste-delete' post.id %}" class="btn btn-sm btn-danger">🗑 Delete</a>
               {% elif user.get_role_display == "Recycler" %}
                 <a href="{% url 'buy-waste' post.id %}" class="btn btn-sm btn-warning">🛒 Buy</a>
-                <a href="{% url 'send-message' post.posted_by.id %}" class="btn btn-sm btn-info">💬 Message</a>
+                <a href="{% url 'send_waste_message' post.posted_by.id %}" class="btn btn-sm btn-info">💬 Message</a>
               {% endif %}
             </div>
           </div>
@@ -48,5 +50,6 @@
       </div>
     {% endfor %}
   </div>
+  <a href="{% url 'dashboard' %}" class="btn btn-secondary">⬅️ Back to Dashboard</a>
 </div>
 {% endblock %}
