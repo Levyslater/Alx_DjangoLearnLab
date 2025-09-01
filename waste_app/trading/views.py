@@ -14,6 +14,7 @@ class WastePostListView(LoginRequiredMixin, ListView):
     ordering = ["-created_at"]
     
     def get_queryset(self):
+        """Only show unsold waste posts."""
         return WastePost.objects.filter(is_sold=False)
 
 class WastePostDetailView(LoginRequiredMixin, DetailView):

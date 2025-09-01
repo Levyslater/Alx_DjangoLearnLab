@@ -28,7 +28,7 @@ class ProfileUpdateForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         """Override init to accept a user instance and populate initial data."""
-        user = kwargs.pop("user", None)  # pass request.user when instantiating
+        user = kwargs.pop("user", None) # Extract user from kwargs
         super().__init__(*args, **kwargs)
 
         if user:

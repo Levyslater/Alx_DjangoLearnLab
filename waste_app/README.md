@@ -43,5 +43,5 @@ It also creates **awareness** on proper waste management practices and includes 
 
 ### 1. Clone the Repository
 ```bash
-git clone https://github.com/your-username/waste-management-app.git
+git clone https://github.com/Levyslater/waste-management-app.git
 cd waste-management-app
