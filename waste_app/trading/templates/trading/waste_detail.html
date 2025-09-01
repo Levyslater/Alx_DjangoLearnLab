@@ -17,9 +17,11 @@
     </div>
     <div class="card-footer d-flex justify-content-between">
 
-      {% if user != waste_post.posted_by %}
-        <a href="{% url 'buy-waste' waste_post.pk %}" class="btn btn-success">💰 Buy Waste</a>
-      {% endif %}
+    {% if user != waste_post.posted_by %}
+        {% if user.get_role_display !=  "Waste Generator"%}
+            <a href="{% url 'buy-waste' waste_post.pk %}" class="btn btn-success">💰 Buy Waste</a>
+        {% endif %}
+    {% endif %}
 
       {% if user == waste_post.posted_by %}
         <div>
